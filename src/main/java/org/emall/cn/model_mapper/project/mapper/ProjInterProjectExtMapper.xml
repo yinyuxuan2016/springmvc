@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<!-- 不使用namespace的话sql搜索定位会比较方便 -->
+<mapper namespace="org.emall.cn.model.project.ProjectVO">
+
+	<resultMap id="RM_ProjectVO" type="org.emall.cn.model.project.ProjectVO">
+        <result property="id" column="ID"/>
+        <result property="tenderFee" column="TENDER_FEE"/>
+        <result property="tenderFeePaymentTime" column="TENDER_FEE_PAYMENT_TIME"/>
+        <result property="bidDeposit" column="BID_DEPOSIT"/>
+        <result property="bidDepositPaymentTime" column="BID_DEPOSIT_PAYMENT_TIME"/>
+        <result property="supplierId" column="SUPPLIRE_ID"/>
+        <result property="projectNumber" column="PROJECT_NUMBER"/>
+        <result property="projectName" column="PROJECT_NAME"/>
+        <result property="expenseId" column="EXPENSE_ID"/>
+	</resultMap>
+
+	<select id="findFeeRemindByParas" parameterType="java.lang.String" resultMap="RM_ProjectVO">
+		SELECT proj_inter_project.ID,proj_inter_project.PROJECT_NUMBER,proj_inter_project.PROJECT_NAME,e.TENDER_FEE_PAYMENT_TIME,e.TENDER_FEE,e.ID EXPENSE_ID,e.BID_DEPOSIT,e.BID_DEPOSIT_PAYMENT_TIME,e.SUPPLIRE_ID
+		FROM  PROJ_INTER_PROJECT proj_inter_project inner join expense_bps_project e
+		on proj_inter_project.id = e.PROJECT_ID AND (e.TENDER_FEE > 0 OR e.BID_DEPOSIT > 0)
+		and e.is_give_back not in (3,4)
+        	AND CREATE_USER_ID=#{_parameter}
+	</select>
+	
+	<select id="queryFeeRemindPage_count" resultType="long">
+		SELECT count(*) from PROJ_INTER_PROJECT proj_inter_project inner join expense_bps_project e
+		on proj_inter_project.id = e.PROJECT_ID AND (e.TENDER_FEE > 0 OR e.BID_DEPOSIT > 0)
+		and e.is_give_back not in (3,4)
+		AND CREATE_USER_ID=#{_parameter}
+	</select>
+	<select id="queryCountUsers" resultType="int">
+		select count(1) from users
+	</select>
+</mapper>

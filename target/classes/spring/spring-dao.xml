@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <!-- 给web使用的spring文件 -->
+    <bean id="propertyConfigurer"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:jdbc.properties</value>
+            </list>
+        </property>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="order" value="0"/>
+        <property name="fileEncoding" value="UTF-8"/>
+    </bean>
+    <!-- spring 使用annotation -->
+    <context:annotation-config />
+   <context:component-scan base-package="org.emall.cn.dao"/>
+    <!--配置数据源：使用druid进行数据源的配置-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+          destroy-method="close">
+        <property name="url" value="${druid.url}" />
+        <property name="username" value="${druid.username}" />
+        <property name="password" value="${druid.password}" />
+        <property name="driverClassName" value="${druid.driverClassName}" />
+        <property name="maxActive" value="${druid.maxActive}" />
+        <property name="initialSize" value="${druid.initialSize}" />
+        <property name="maxWait" value="${druid.maxWait}" />
+        <property name="minIdle" value="${druid.minIdle}" />
+        <property name="timeBetweenEvictionRunsMillis" value="${druid.timeBetweenEvictionRunsMillis}" />
+        <property name="minEvictableIdleTimeMillis" value="${druid.minEvictableIdleTimeMillis}" />
+        <property name="validationQuery" value="${druid.validationQuery}" />
+        <property name="testWhileIdle" value="${druid.testWhileIdle}" />
+        <property name="testOnBorrow" value="${druid.testOnBorrow}" />
+        <property name="testOnReturn" value="${druid.testOnReturn}" />
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="${druid.maxPoolPreparedStatementPerConnectionSize}" />
+    </bean>
+    <!-- 配置数据源：使用c3p0作为数据源进行配置 -->
+    <bean id="dataSource2"
+          class="com.mchange.v2.c3p0.ComboPooledDataSource"
+          destroy-method="close">
+        <property name="driverClass">
+            <value>${jdbc.driverClassName}</value>
+        </property>
+        <property name="jdbcUrl">
+            <value>${jdbc.url}</value>
+        </property>
+        <property name="user">
+            <value>${jdbc.username}</value>
+        </property>
+        <property name="password">
+            <value>${jdbc.password}</value>
+        </property>
+
+        <!--连接池中保留的最小连接数。-->
+        <property name="minPoolSize">
+            <value>5</value>
+        </property>
+
+        <!--连接池中保留的最大连接数。Default: 15 -->
+        <property name="maxPoolSize">
+            <value>30</value>
+        </property>
+
+        <!--初始化时获取的连接数，取值应在minPoolSize与maxPoolSize之间。Default: 3 -->
+        <property name="initialPoolSize">
+            <value>10</value>
+        </property>
+
+        <!--最大空闲时间,60秒内未使用则连接被丢弃。若为0则永不丢弃。Default: 0 -->
+        <property name="maxIdleTime">
+            <value>60</value>
+        </property>
+
+        <!--当连接池中的连接耗尽的时候c3p0一次同时获取的连接数。Default: 3 -->
+        <property name="acquireIncrement">
+            <value>5</value>
+        </property>
+
+        <!--JDBC的标准参数，用以控制数据源内加载的PreparedStatements数量。但由于预缓存的statements
+         属于单个connection而不是整个连接池。所以设置这个参数需要考虑到多方面的因素。
+         如果maxStatements与maxStatementsPerConnection均为0，则缓存被关闭。Default: 0-->
+        <property name="maxStatements">
+            <value>0</value>
+        </property>
+
+        <!--每60秒检查所有连接池中的空闲连接。Default: 0 -->
+        <property name="idleConnectionTestPeriod">
+            <value>60</value>
+        </property>
+
+        <!--定义在从数据库获取新连接失败后重复尝试的次数。Default: 30 -->
+        <property name="acquireRetryAttempts">
+            <value>30</value>
+        </property>
+
+        <!--获取连接失败将会引起所有等待连接池来获取连接的线程抛出异常。但是数据源仍有效
+         保留，并在下次调用getConnection()的时候继续尝试获取连接。如果设为true，那么在尝试
+         获取连接失败后该数据源将申明已断开并永久关闭。Default: false-->
+        <property name="breakAfterAcquireFailure">
+            <value>true</value>
+        </property>
+
+        <!--因性能消耗大请只在需要的时候使用它。如果设为true那么在每个connection提交的
+         时候都将校验其有效性。建议使用idleConnectionTestPeriod或automaticTestTable
+         等方法来提升连接测试的性能。Default: false -->
+        <property name="testConnectionOnCheckout">
+            <value>false</value>
+        </property>
+    </bean>
+    <!--实现一个简单的多数据路由的配置-->
+    <bean id="multipleDataSource"   class="org.emall.cn.dao.dataSource.MultipleDataSource">
+        <property name="defaultTargetDataSource" ref="dataSource" />
+        <property name="targetDataSources">
+            <map>
+                <entry key="key1" value-ref="dataSource" />
+                <entry key="key2" value-ref="dataSource2" />
+            </map>
+        </property>
+    </bean>
+    <!--<bean id="transactionFactory"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>-->
+    <bean id="SqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="multipleDataSource" />
+        <property name="mapperLocations"
+                  value="classpath*:org/emall/cn/model_mapper/**/mapper/*.xml" />
+        <property name="typeAliasesPackage" value="classpath:org.emall.cn.model" />
+        <!--<property name="transactionFactory" ref="transactionFactory"/>-->
+    </bean>
+
+    <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg index="0" ref="SqlSessionFactory" />
+    </bean>
+    <!--启动aop自动代理的注解-->
+    <aop:aspectj-autoproxy proxy-target-class="true" />
+    <bean id="advice" class="org.emall.cn.dao.adivce.MutipleAdvice"/>
+    <!--配置切点-->
+    <bean id="multiPoint"
+          class="org.springframework.aop.aspectj.AspectJExpressionPointcut">
+        <property name="expression"
+                  value="execution(* *org.emall.cn.dao.impl.*.*(..))"/>
+    </bean>
+    <bean id="defaultPointcutAdvisor " class="org.springframework.aop.support.DefaultPointcutAdvisor">
+        <property name="advice" ref="advice" />
+        <property name="pointcut" ref="multiPoint" />
+    </bean>
+
+</beans>

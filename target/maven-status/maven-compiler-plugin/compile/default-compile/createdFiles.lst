@@ -1,0 +1,7 @@
+org\emall\cn\model\project\ProjInterProject.class
+org\emall\cn\model\project\ProjectVO.class
+org\emall\cn\dao\ProjInterProjectDAO.class
+org\emall\cn\common\DateUtils.class
+org\emall\cn\model\project\DataValidBaseModel.class
+org\emall\cn\model\project\BaseModel.class
+org\emall\cn\dao\impl\ProjInterProjectDAOImpl.class

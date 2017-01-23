@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+    <!-- spring 使用annotation -->
+    <context:annotation-config />
+    <context:component-scan base-package="org.emall.cn.service"/>
+    <!--使用传统的事务控制不了多数据源 DataSourceTransactionManager-->
+    <!--<bean id="transactionManager" class="org.springframework.transaction.jta.JtaTransactionManager">
+        &lt;!&ndash;<property name="dataSource" ref="multipleDataSource"/>&ndash;&gt;
+        <property name="userTransaction" ref=""></property>
+    </bean>
+    <tx:annotation-driven transaction-manager="transactionManager" order="2"/>-->
+    <!-- atomikos事务管理器 -->
+
+          <!--  <bean id="atomikosTransactionManager"
+            class="com.atomikos.icatch.jta.UserTransactionManager"
+            init-method="init" destroy-method="close">
+            <property name="forceShutdown">
+                <value>true</value>
+            </property>
+            </bean>
+            <bean id="atomikosUserTransaction"
+                    class="com.atomikos.icatch.jta.UserTransactionImp">
+            <property name="transactionTimeout">
+            <value>2000</value>
+            </property>
+                    </bean>
+                    &lt;!&ndash;spring 事务管理器 &ndash;&gt;
+            <bean id="springJTATransactionManager"
+                    class="org.springframework.transaction.jta.JtaTransactionManager">
+                <property name="transactionManager" ref="atomikosTransactionManager"/>
+                <property name="userTransaction" ref="atomikosUserTransaction"/>
+            </bean>-->
+    <!--<tx:annotation-driven transaction-manager="springJTATransactionManager" order="2" proxy-target-class="true"/>-->
+</beans>

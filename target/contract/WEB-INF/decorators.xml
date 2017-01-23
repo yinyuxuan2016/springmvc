@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<decorators defaultdir="/WEB-INF/pages/template">
+	<!-- 排除页面,不需要sitemesh 装饰 -->
+	<excludes>
+		<pattern>*/contract/index.jsp</pattern>
+	</excludes>
+
+	<!-- 提示页装饰模版 -->
+	<decorator name="contract-webapp" page="contract-webapp.jsp">
+		<pattern>*</pattern>
+	</decorator>
+</decorators>

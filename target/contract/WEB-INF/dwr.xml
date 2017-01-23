@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dwr PUBLIC "-//GetAhead Limited//DTD Direct Web Remoting 2.0//EN" "http://getahead.org/dwr//dwr20.dtd">
+<dwr>
+    <allow>
+        <create creator="new" javascript="MessagePush">
+            <param name="class" value="org.emall.cn.service.dwr.MessagePush"/>
+        </create>
+        <create creator="new" javascript="TestPush">
+            <param name="class" value="org.emall.cn.service.dwr.TestPush"/>
+        </create>
+    </allow>
+</dwr>
+<!--
+<dwr>
+    <allow>
+        <create creator="new" javascript="DWRAction">
+            <param name="class" value="org.emall.cn.controller.DwrActionTest"/>
+            <include method="DwrTest"/>
+            <include method="sessionDestory"/>
+        </create>
+
+        <create creator="new" javascript="DWRReverse">
+            <param name="class" value="org.emall.cn.controller.DWRReverse" />
+        </create>
+
+        <convert converter="bean" match="org.emall.cn.model.project.User">
+            <param name="include" value="username,password" />
+        </convert>
+    </allow>
+</dwr>-->
