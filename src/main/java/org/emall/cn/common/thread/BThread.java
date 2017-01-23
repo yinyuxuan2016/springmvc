@@ -1,7 +1,7 @@
 package org.emall.cn.common.thread;
 
 /**
- * @Description
+ * @Description Thread.join()的演示执行的时候会挂起当前的线程，等待子线程完成后再执行
  * @Author <a href="mailto:dongbiaozheng@ebnew.com">zhengdb</a>
  * @Date 2017/1/20
  */
