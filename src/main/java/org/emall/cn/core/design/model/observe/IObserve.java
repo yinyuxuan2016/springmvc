@@ -6,5 +6,5 @@ package org.emall.cn.core.design.model.observe;
  * @Date 2016/6/30
  */
 public interface IObserve {
-    public void update();
+    public void update(String msg);
 }

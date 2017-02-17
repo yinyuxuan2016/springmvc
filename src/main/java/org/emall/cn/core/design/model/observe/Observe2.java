@@ -7,7 +7,7 @@ package org.emall.cn.core.design.model.observe;
  */
 public class Observe2 implements IObserve{
     @Override
-    public void update() {
-        System.out.println("observe2 is received");
+    public void update(String msg) {
+        System.out.println("observe2 is received,and msg is:"+msg);
     }
 }

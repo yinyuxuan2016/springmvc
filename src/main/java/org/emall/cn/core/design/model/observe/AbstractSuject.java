@@ -25,7 +25,7 @@ public abstract class AbstractSuject implements Subject{
     public void notifyAllUser() {
         Enumeration<IObserve> enumeration=vector.elements();
         while(enumeration.hasMoreElements()){
-            enumeration.nextElement().update();
+            enumeration.nextElement().update("this is msg");
         }
     }
 
